@@ -26,25 +26,25 @@ export default async function DashboardPage() {
 
   return (
     <div>
-      {(expiredCount > 0 || soonCount > 0) && (
-        <div className="mb-4 flex gap-2 flex-wrap">
-          {expiredCount > 0 && (
-            <div className="text-sm font-bold px-4 py-2 rounded-full" style={{ backgroundColor: '#FFE8E8', color: '#B85555' }}>
-              ⚠️ 期限切れ {expiredCount}件
-            </div>
-          )}
-          {soonCount > 0 && (
-            <div className="text-sm font-bold px-4 py-2 rounded-full" style={{ backgroundColor: '#FFF3DC', color: '#9A7030' }}>
-              🕐 期限間近 {soonCount}件
-            </div>
-          )}
+      {/* サマリーカード */}
+      <div className="grid grid-cols-3 gap-3 mb-6">
+        <div className="rounded-2xl p-4 text-center" style={{ backgroundColor: '#FFFEFA', boxShadow: '0 2px 12px rgba(0,0,0,0.05)' }}>
+          <p className="text-2xl font-black" style={{ color: '#3F5F4B' }}>{allFoods.length}</p>
+          <p className="text-xs font-medium mt-1" style={{ color: '#8FA898' }}>登録食材</p>
         </div>
-      )}
+        <div className="rounded-2xl p-4 text-center" style={{ backgroundColor: '#FFFCF4', boxShadow: '0 2px 12px rgba(0,0,0,0.05)' }}>
+          <p className="text-2xl font-black" style={{ color: '#9A7030' }}>{soonCount}</p>
+          <p className="text-xs font-medium mt-1" style={{ color: '#B89858' }}>期限間近</p>
+        </div>
+        <div className="rounded-2xl p-4 text-center" style={{ backgroundColor: '#FFF8F8', boxShadow: '0 2px 12px rgba(0,0,0,0.05)' }}>
+          <p className="text-2xl font-black" style={{ color: '#B85555' }}>{expiredCount}</p>
+          <p className="text-xs font-medium mt-1" style={{ color: '#C87878' }}>期限切れ</p>
+        </div>
+      </div>
 
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-bold" style={{ color: '#3F5F4B' }}>
           冷蔵庫の中身
-          <span className="ml-2 text-sm font-normal" style={{ color: '#A8B8A8' }}>{allFoods.length}品</span>
         </h2>
         <Link
           href="/add"
