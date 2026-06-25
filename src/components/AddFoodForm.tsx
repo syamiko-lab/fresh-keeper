@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import { MasterFood } from '@/lib/types'
 
@@ -64,12 +63,7 @@ export default function AddFoodForm({ masterFoods, userId }: Props) {
 
   return (
     <div>
-      <div className="flex items-center gap-3 mb-6">
-        <Link href="/" className="w-9 h-9 flex items-center justify-center rounded-full transition-colors" style={{ backgroundColor: '#FFFEFA', boxShadow: '0 1px 4px rgba(0,0,0,0.08)', color: '#6B7F73' }}>
-          ←
-        </Link>
-        <h2 className="text-xl font-black" style={{ color: '#3F5F4B' }}>食材を追加</h2>
-      </div>
+      <h2 className="text-xl font-black mb-6" style={{ color: '#3F5F4B' }}>食材を追加</h2>
 
       <form onSubmit={handleSubmit} className="rounded-[2rem] p-6 space-y-5 mb-6" style={{ backgroundColor: '#FFFEFA', boxShadow: '0 4px 24px rgba(0,0,0,0.06)' }}>
         <div>
