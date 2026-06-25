@@ -24,15 +24,13 @@ export default async function AppLayout({ children }: { children: React.ReactNod
               Fresh Keeper
             </h1>
           </div>
-          <div className="relative z-10 flex items-center gap-3">
-            <span className="text-sm font-medium hidden sm:block" style={{ color: '#3F5F4B', textShadow: '0 1px 4px rgba(255,255,255,0.7)' }}>
-              👤 {username}
-            </span>
+          <div className="relative z-10 flex flex-col items-center gap-1 px-4 py-2 rounded-2xl" style={{ backgroundColor: 'rgba(255,255,255,0.75)', backdropFilter: 'blur(4px)' }}>
+            <span className="text-xs font-bold" style={{ color: '#3F5F4B' }}>👤 {username}</span>
             <form action="/auth/signout" method="post">
               <button
                 type="submit"
-                className="text-sm font-medium px-4 py-1.5 rounded-full transition-all"
-                style={{ backgroundColor: 'rgba(255,255,255,0.75)', color: '#3F5F4B', backdropFilter: 'blur(4px)' }}
+                className="text-xs font-medium transition-all hover:opacity-70"
+                style={{ color: '#8FA898' }}
               >
                 ログアウト
               </button>
