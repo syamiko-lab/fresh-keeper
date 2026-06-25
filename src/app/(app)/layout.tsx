@@ -1,16 +1,24 @@
 import Link from 'next/link'
+import { Nunito } from 'next/font/google'
+
+const nunito = Nunito({ weight: '800', subsets: ['latin'] })
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#F4F7F2' }}>
       <header className="sticky top-0 z-10" style={{ boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
-        <div className="relative flex items-center justify-end px-4" style={{ height: '100px' }}>
+        <div className="relative flex items-center justify-between px-6" style={{ height: '100px' }}>
           <img
-            src="/header-bg.jpg"
-            alt="Fresh Keeper"
+            src="/header-bg.png"
+            alt=""
             className="absolute inset-0 w-full h-full object-cover"
             style={{ objectPosition: 'left center' }}
           />
+          <div className="relative z-10">
+            <h1 className={`${nunito.className} text-3xl tracking-wide`} style={{ color: '#3F5F4B', textShadow: '0 1px 6px rgba(255,255,255,0.7)' }}>
+              Fresh Keeper
+            </h1>
+          </div>
           <div className="relative z-10">
             <form action="/auth/signout" method="post">
               <button
@@ -50,11 +58,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
 function NavTab({ href, label }: { href: string; label: string }) {
   return (
-    <Link
-      href={href}
-      className="px-6 py-3 text-sm font-medium transition-colors hover:opacity-70"
-      style={{ color: '#4F7A62' }}
-    >
+    <Link href={href} className="px-6 py-3 text-sm font-medium transition-colors hover:opacity-70" style={{ color: '#4F7A62' }}>
       {label}
     </Link>
   )
