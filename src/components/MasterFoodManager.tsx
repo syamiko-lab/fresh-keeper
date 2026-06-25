@@ -6,10 +6,7 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import { MasterFood } from '@/lib/types'
 
-type Props = {
-  masterFoods: MasterFood[]
-  userId: string
-}
+type Props = { masterFoods: MasterFood[]; userId: string }
 
 const CATEGORIES = ['肉類', '魚類', '野菜', '乳製品', '卵・豆腐', '加工食品', 'その他']
 
@@ -25,12 +22,7 @@ export default function MasterFoodManager({ masterFoods, userId }: Props) {
     e.preventDefault()
     setLoading(true)
     const supabase = createClient()
-    await supabase.from('master_foods').insert({
-      user_id: userId,
-      name,
-      category,
-      default_days: parseInt(defaultDays),
-    })
+    await supabase.from('master_foods').insert({ user_id: userId, name, category, default_days: parseInt(defaultDays) })
     setName('')
     setDefaultDays('')
     router.refresh()
@@ -47,18 +39,19 @@ export default function MasterFoodManager({ masterFoods, userId }: Props) {
   }
 
   const categories = [...new Set(masterFoods.map(m => m.category))]
+  const inputStyle: React.CSSProperties = { border: '1.5px solid #C8D8C8', backgroundColor: '#FAFDF8' }
 
   return (
     <div>
       <div className="flex items-center gap-3 mb-6">
-        <Link href="/" className="w-9 h-9 flex items-center justify-center rounded-full bg-white shadow-sm text-gray-400 hover:text-emerald-600 transition-colors">
+        <Link href="/" className="w-9 h-9 flex items-center justify-center rounded-full transition-colors" style={{ backgroundColor: '#FFFEFA', boxShadow: '0 1px 4px rgba(0,0,0,0.08)', color: '#6B7F73' }}>
           ←
         </Link>
-        <h2 className="text-xl font-black text-gray-700">マスターDB</h2>
+        <h2 className="text-xl font-black" style={{ color: '#3F5F4B' }}>マスターDB</h2>
       </div>
 
-      <div className="bg-white rounded-3xl shadow-sm p-6 mb-6">
-        <h3 className="text-sm font-bold text-gray-600 mb-4">食材を追加</h3>
+      <div className="rounded-[2rem] p-6 mb-6" style={{ backgroundColor: '#FFFEFA', boxShadow: '0 4px 24px rgba(0,0,0,0.06)' }}>
+        <h3 className="text-sm font-bold mb-4" style={{ color: '#6B7F73' }}>食材を追加</h3>
         <form onSubmit={handleAdd} className="space-y-3">
           <div className="flex gap-2">
             <input
@@ -67,12 +60,14 @@ export default function MasterFoodManager({ masterFoods, userId }: Props) {
               onChange={(e) => setName(e.target.value)}
               required
               placeholder="食材名"
-              className="flex-1 border-2 border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-emerald-400 transition-colors"
+              className="flex-1 rounded-xl px-3 py-2.5 text-sm focus:outline-none transition-colors"
+              style={inputStyle}
             />
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="border-2 border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-emerald-400 transition-colors bg-white"
+              className="rounded-xl px-3 py-2.5 text-sm focus:outline-none transition-colors"
+              style={{ ...inputStyle, color: '#3F5F4B' }}
             >
               {CATEGORIES.map(c => <option key={c}>{c}</option>)}
             </select>
@@ -85,13 +80,15 @@ export default function MasterFoodManager({ masterFoods, userId }: Props) {
               required
               min={1}
               placeholder="日数"
-              className="flex-1 border-2 border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-emerald-400 transition-colors"
+              className="flex-1 rounded-xl px-3 py-2.5 text-sm focus:outline-none transition-colors"
+              style={inputStyle}
             />
-            <span className="text-sm text-gray-500 whitespace-nowrap">日間</span>
+            <span className="text-sm whitespace-nowrap" style={{ color: '#8FA898' }}>日間</span>
             <button
               type="submit"
               disabled={loading}
-              className="bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-sm font-bold px-5 py-2.5 rounded-xl transition-all shadow-sm hover:shadow-md disabled:opacity-50 whitespace-nowrap"
+              className="text-white text-sm font-bold px-5 py-2.5 rounded-xl transition-all shadow-sm hover:shadow-md disabled:opacity-50 hover:opacity-90 whitespace-nowrap"
+              style={{ backgroundColor: '#4F7A62' }}
             >
               追加
             </button>
@@ -101,25 +98,32 @@ export default function MasterFoodManager({ masterFoods, userId }: Props) {
 
       <div className="space-y-3">
         {categories.map(cat => (
-          <div key={cat} className="bg-white rounded-2xl shadow-sm overflow-hidden">
-            <div className="px-4 py-3 bg-gradient-to-r from-emerald-50 to-teal-50 border-b border-emerald-100">
-              <p className="text-sm font-bold text-emerald-700">{cat}</p>
+          <div key={cat} className="rounded-2xl overflow-hidden" style={{ backgroundColor: '#FFFEFA', boxShadow: '0 2px 12px rgba(0,0,0,0.05)' }}>
+            <div className="px-4 py-3" style={{ backgroundColor: '#F0F7F2', borderBottom: '1px solid #E0EDE4' }}>
+              <p className="text-sm font-bold" style={{ color: '#4F7A62' }}>{cat}</p>
             </div>
-            <div className="divide-y divide-gray-100">
-              {masterFoods.filter(m => m.category === cat).map(m => (
-                <div key={m.id} className="flex items-center justify-between px-4 py-3">
+            <div>
+              {masterFoods.filter(m => m.category === cat).map((m, i, arr) => (
+                <div
+                  key={m.id}
+                  className="flex items-center justify-between px-4 py-3"
+                  style={{ borderBottom: i < arr.length - 1 ? '1px solid #F0F5F0' : 'none' }}
+                >
                   <div>
-                    <span className="text-sm font-medium text-gray-800">{m.name}</span>
-                    <span className="text-xs text-gray-400 ml-2">購入後 {m.default_days} 日</span>
+                    <span className="text-sm font-medium" style={{ color: '#3F5F4B' }}>{m.name}</span>
+                    <span className="text-xs ml-2" style={{ color: '#A8B8A8' }}>購入後 {m.default_days} 日</span>
                     {m.user_id === null && (
-                      <span className="text-xs text-teal-500 bg-teal-50 px-2 py-0.5 rounded-full ml-2">共通</span>
+                      <span className="text-xs px-2 py-0.5 rounded-full ml-2" style={{ backgroundColor: '#E8F3EC', color: '#4F7A62' }}>共通</span>
                     )}
                   </div>
                   {m.user_id !== null && (
                     <button
                       onClick={() => handleDelete(m.id, m.name)}
                       disabled={deletingId === m.id}
-                      className="w-8 h-8 flex items-center justify-center rounded-full text-gray-300 hover:bg-red-100 hover:text-red-500 transition-all disabled:opacity-30"
+                      className="w-8 h-8 flex items-center justify-center rounded-full transition-all disabled:opacity-30"
+                      style={{ color: '#C8D8C8' }}
+                      onMouseEnter={e => (e.currentTarget.style.backgroundColor = '#FFE8E8', e.currentTarget.style.color = '#B85555')}
+                      onMouseLeave={e => (e.currentTarget.style.backgroundColor = 'transparent', e.currentTarget.style.color = '#C8D8C8')}
                       aria-label="削除"
                     >
                       🗑

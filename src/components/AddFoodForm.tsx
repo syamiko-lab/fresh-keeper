@@ -6,10 +6,7 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import { MasterFood } from '@/lib/types'
 
-type Props = {
-  masterFoods: MasterFood[]
-  userId: string
-}
+type Props = { masterFoods: MasterFood[]; userId: string }
 
 function toDateString(date: Date): string {
   return date.toISOString().split('T')[0]
@@ -44,7 +41,6 @@ export default function AddFoodForm({ masterFoods, userId }: Props) {
     e.preventDefault()
     setLoading(true)
     setError('')
-
     const supabase = createClient()
     const { error } = await supabase.from('food_items').insert({
       user_id: userId,
@@ -53,32 +49,32 @@ export default function AddFoodForm({ masterFoods, userId }: Props) {
       quantity: quantity || null,
       memo: memo || null,
     })
-
     if (error) {
       setError('保存に失敗しました。もう一度お試しください。')
       setLoading(false)
       return
     }
-
     router.push('/')
     router.refresh()
   }
 
   const categories = [...new Set(masterFoods.map(m => m.category))]
 
+  const inputStyle: React.CSSProperties = { border: '1.5px solid #C8D8C8', backgroundColor: '#FAFDF8' }
+
   return (
     <div>
       <div className="flex items-center gap-3 mb-6">
-        <Link href="/" className="w-9 h-9 flex items-center justify-center rounded-full bg-white shadow-sm text-gray-400 hover:text-emerald-600 transition-colors">
+        <Link href="/" className="w-9 h-9 flex items-center justify-center rounded-full transition-colors" style={{ backgroundColor: '#FFFEFA', boxShadow: '0 1px 4px rgba(0,0,0,0.08)', color: '#6B7F73' }}>
           ←
         </Link>
-        <h2 className="text-xl font-black text-gray-700">食材を追加</h2>
+        <h2 className="text-xl font-black" style={{ color: '#3F5F4B' }}>食材を追加</h2>
       </div>
 
-      <form onSubmit={handleSubmit} className="bg-white rounded-3xl shadow-sm p-6 space-y-5 mb-6">
+      <form onSubmit={handleSubmit} className="rounded-[2rem] p-6 space-y-5 mb-6" style={{ backgroundColor: '#FFFEFA', boxShadow: '0 4px 24px rgba(0,0,0,0.06)' }}>
         <div>
-          <label className="block text-sm font-bold text-gray-600 mb-1.5">
-            食材名 <span className="text-red-400">*</span>
+          <label className="block text-sm font-medium mb-1.5" style={{ color: '#6B7F73' }}>
+            食材名 <span style={{ color: '#B85555' }}>*</span>
           </label>
           <input
             type="text"
@@ -86,7 +82,8 @@ export default function AddFoodForm({ masterFoods, userId }: Props) {
             onChange={(e) => handleNameChange(e.target.value)}
             required
             list="master-foods-list"
-            className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-400 transition-colors"
+            className="w-full rounded-xl px-4 py-3 text-sm focus:outline-none transition-colors"
+            style={inputStyle}
             placeholder="例：豚肉、牛乳、キャベツ"
           />
           <datalist id="master-foods-list">
@@ -95,10 +92,10 @@ export default function AddFoodForm({ masterFoods, userId }: Props) {
         </div>
 
         <div>
-          <label className="block text-sm font-bold text-gray-600 mb-1.5">
-            賞味期限 <span className="text-red-400">*</span>
+          <label className="block text-sm font-medium mb-1.5" style={{ color: '#6B7F73' }}>
+            賞味期限 <span style={{ color: '#B85555' }}>*</span>
             {autoFilled && (
-              <span className="ml-2 text-xs font-normal text-emerald-500 bg-emerald-50 px-2 py-0.5 rounded-full">
+              <span className="ml-2 text-xs font-normal px-2 py-0.5 rounded-full" style={{ backgroundColor: '#E8F3EC', color: '#4F7A62' }}>
                 自動入力
               </span>
             )}
@@ -108,65 +105,69 @@ export default function AddFoodForm({ masterFoods, userId }: Props) {
             value={expiryDate}
             onChange={(e) => { setExpiryDate(e.target.value); setAutoFilled(false) }}
             required
-            className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-400 transition-colors"
+            className="w-full rounded-xl px-4 py-3 text-sm focus:outline-none transition-colors"
+            style={inputStyle}
           />
         </div>
 
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="block text-sm font-bold text-gray-600 mb-1.5">数量（任意）</label>
+            <label className="block text-sm font-medium mb-1.5" style={{ color: '#6B7F73' }}>数量（任意）</label>
             <input
               type="text"
               value={quantity}
               onChange={(e) => setQuantity(e.target.value)}
-              className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-400 transition-colors"
+              className="w-full rounded-xl px-4 py-3 text-sm focus:outline-none transition-colors"
+              style={inputStyle}
               placeholder="例：2パック"
             />
           </div>
           <div>
-            <label className="block text-sm font-bold text-gray-600 mb-1.5">メモ（任意）</label>
+            <label className="block text-sm font-medium mb-1.5" style={{ color: '#6B7F73' }}>メモ（任意）</label>
             <input
               type="text"
               value={memo}
               onChange={(e) => setMemo(e.target.value)}
-              className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-400 transition-colors"
+              className="w-full rounded-xl px-4 py-3 text-sm focus:outline-none transition-colors"
+              style={inputStyle}
               placeholder="例：冷凍済み"
             />
           </div>
         </div>
 
         {error && (
-          <div className="bg-red-50 border border-red-200 rounded-xl px-4 py-3">
-            <p className="text-red-600 text-sm">{error}</p>
+          <div className="rounded-xl px-4 py-3" style={{ backgroundColor: '#FFF0F0', border: '1px solid #F5C6C6' }}>
+            <p className="text-sm" style={{ color: '#B85555' }}>{error}</p>
           </div>
         )}
 
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-black py-3.5 rounded-xl transition-all shadow-md hover:shadow-lg disabled:opacity-50 text-base"
+          className="w-full text-white font-black py-3.5 rounded-xl transition-all shadow-sm hover:shadow-md disabled:opacity-50 hover:opacity-90"
+          style={{ backgroundColor: '#4F7A62' }}
         >
           {loading ? '保存中...' : '🧊 冷蔵庫に追加'}
         </button>
       </form>
 
-      <div className="bg-white rounded-3xl shadow-sm p-6">
-        <p className="text-sm font-bold text-gray-500 mb-4">タップして選択</p>
+      <div className="rounded-[2rem] p-6" style={{ backgroundColor: '#FFFEFA', boxShadow: '0 4px 24px rgba(0,0,0,0.06)' }}>
+        <p className="text-sm font-bold mb-4" style={{ color: '#8FA898' }}>タップして選択</p>
         <div className="space-y-4">
           {categories.map(cat => (
             <div key={cat}>
-              <p className="text-xs font-bold text-gray-400 mb-2">{cat}</p>
+              <p className="text-xs font-bold mb-2" style={{ color: '#A8B8A8' }}>{cat}</p>
               <div className="flex flex-wrap gap-2">
                 {masterFoods.filter(m => m.category === cat).map(m => (
                   <button
                     key={m.id}
                     type="button"
                     onClick={() => handleNameChange(m.name)}
-                    className={`text-sm px-3 py-1.5 rounded-full transition-all font-medium ${
-                      name === m.name
-                        ? 'bg-emerald-500 text-white shadow-md'
-                        : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100'
-                    }`}
+                    className="text-sm px-3 py-1.5 rounded-full transition-all font-medium"
+                    style={name === m.name
+                      ? { backgroundColor: '#4F7A62', color: '#FFFFFF' }
+                      : { backgroundColor: '#E8F3EC', color: '#4F7A62' }
+                    }
                   >
                     {m.name}
                   </button>

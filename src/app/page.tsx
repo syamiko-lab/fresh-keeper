@@ -16,30 +16,28 @@ export default async function DashboardPage() {
     .eq('user_id', user.id)
     .order('expiry_date', { ascending: true })
 
-  const expiredCount = (foods ?? []).filter(f => {
-    const days = Math.floor((new Date(f.expiry_date).getTime() - new Date().setHours(0,0,0,0)) / 86400000)
-    return days < 0
-  }).length
-
-  const soonCount = (foods ?? []).filter(f => {
-    const days = Math.floor((new Date(f.expiry_date).getTime() - new Date().setHours(0,0,0,0)) / 86400000)
-    return days >= 0 && days <= 3
+  const allFoods = foods ?? []
+  const now = new Date().setHours(0, 0, 0, 0)
+  const expiredCount = allFoods.filter(f => new Date(f.expiry_date).setHours(0,0,0,0) < now).length
+  const soonCount = allFoods.filter(f => {
+    const d = Math.floor((new Date(f.expiry_date).setHours(0,0,0,0) - now) / 86400000)
+    return d >= 0 && d <= 3
   }).length
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-emerald-50 to-white">
-      <header className="bg-white/80 backdrop-blur border-b border-emerald-100 px-4 py-4 sticky top-0 z-10">
+    <div className="min-h-screen" style={{ backgroundColor: '#F4F7F2' }}>
+      <header className="px-4 py-4 sticky top-0 z-10" style={{ backgroundColor: '#FFFEFA', boxShadow: '0 1px 8px rgba(0,0,0,0.06)' }}>
         <div className="max-w-2xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="text-2xl">🥦</span>
-            <h1 className="text-xl font-black text-emerald-600">Fresh Keeper</h1>
+            <h1 className="text-xl font-black" style={{ color: '#3F5F4B' }}>Fresh Keeper</h1>
           </div>
           <div className="flex items-center gap-4">
-            <Link href="/master" className="text-sm text-gray-500 hover:text-emerald-600 font-medium transition-colors">
+            <Link href="/master" className="text-sm font-medium transition-colors" style={{ color: '#6B7F73' }}>
               マスターDB
             </Link>
             <form action="/auth/signout" method="post">
-              <button type="submit" className="text-sm text-gray-400 hover:text-gray-600 transition-colors">
+              <button type="submit" className="text-sm transition-colors" style={{ color: '#A8B8A8' }}>
                 ログアウト
               </button>
             </form>
@@ -51,12 +49,12 @@ export default async function DashboardPage() {
         {(expiredCount > 0 || soonCount > 0) && (
           <div className="mb-4 flex gap-2 flex-wrap">
             {expiredCount > 0 && (
-              <div className="bg-red-100 text-red-700 text-sm font-bold px-4 py-2 rounded-full">
+              <div className="text-sm font-bold px-4 py-2 rounded-full" style={{ backgroundColor: '#FFE8E8', color: '#B85555' }}>
                 ⚠️ 期限切れ {expiredCount}件
               </div>
             )}
             {soonCount > 0 && (
-              <div className="bg-amber-100 text-amber-700 text-sm font-bold px-4 py-2 rounded-full">
+              <div className="text-sm font-bold px-4 py-2 rounded-full" style={{ backgroundColor: '#FFF3DC', color: '#9A7030' }}>
                 🕐 期限間近 {soonCount}件
               </div>
             )}
@@ -64,19 +62,20 @@ export default async function DashboardPage() {
         )}
 
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-bold text-gray-700">
+          <h2 className="text-lg font-bold" style={{ color: '#3F5F4B' }}>
             冷蔵庫の中身
-            <span className="ml-2 text-sm font-normal text-gray-400">{(foods ?? []).length}品</span>
+            <span className="ml-2 text-sm font-normal" style={{ color: '#A8B8A8' }}>{allFoods.length}品</span>
           </h2>
           <Link
             href="/add"
-            className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white text-sm font-bold px-5 py-2.5 rounded-full transition-all shadow-md hover:shadow-lg"
+            className="text-white text-sm font-bold px-5 py-2.5 rounded-full transition-all shadow-sm hover:shadow-md hover:opacity-90"
+            style={{ backgroundColor: '#4F7A62' }}
           >
             + 追加
           </Link>
         </div>
 
-        <FoodList foods={foods as FoodItem[] ?? []} />
+        <FoodList foods={allFoods as FoodItem[]} />
       </main>
     </div>
   )

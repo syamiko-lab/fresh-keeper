@@ -34,7 +34,7 @@ export default function SignupPage() {
 
   if (done) {
     return (
-      <div className="min-h-screen flex items-center justify-center px-4 bg-gradient-to-br from-emerald-400 via-teal-300 to-cyan-400">
+      <div className="min-h-screen flex items-center justify-center px-4 bg-cover bg-center bg-no-repeat" style={{ backgroundImage: "url('/login-bg.png')" }}>
         <div className="w-full max-w-md bg-white rounded-3xl shadow-xl p-8 text-center">
           <div className="text-5xl mb-4">📧</div>
           <h2 className="text-xl font-bold text-gray-800 mb-2">確認メールを送信しました</h2>
@@ -51,7 +51,7 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 bg-gradient-to-br from-emerald-400 via-teal-300 to-cyan-400">
+    <div className="min-h-screen flex items-center justify-center px-4 bg-cover bg-center bg-no-repeat" style={{ backgroundImage: "url('/login-bg.png')" }}>
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <div className="text-6xl mb-3">🥦</div>
