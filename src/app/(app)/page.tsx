@@ -27,16 +27,16 @@ export default async function DashboardPage() {
   return (
     <div>
       {/* サマリーカード */}
-      <div className="grid grid-cols-3 gap-3 mb-6">
-        <div className="rounded-2xl p-4 text-center" style={{ backgroundColor: '#FFFEFA', boxShadow: '0 2px 12px rgba(0,0,0,0.05)' }}>
+      <div style={{ display: 'flex', gap: '12px', marginBottom: '24px' }}>
+        <div className="rounded-2xl p-4 text-center" style={{ flex: 1, backgroundColor: '#FFFEFA', boxShadow: '0 2px 12px rgba(0,0,0,0.05)' }}>
           <p className="text-2xl font-black" style={{ color: '#3F5F4B' }}>{allFoods.length}</p>
           <p className="text-xs font-medium mt-1" style={{ color: '#8FA898' }}>登録食材</p>
         </div>
-        <div className="rounded-2xl p-4 text-center" style={{ backgroundColor: '#FFFCF4', boxShadow: '0 2px 12px rgba(0,0,0,0.05)' }}>
+        <div className="rounded-2xl p-4 text-center" style={{ flex: 1, backgroundColor: '#FFFCF4', boxShadow: '0 2px 12px rgba(0,0,0,0.05)' }}>
           <p className="text-2xl font-black" style={{ color: '#9A7030' }}>{soonCount}</p>
           <p className="text-xs font-medium mt-1" style={{ color: '#B89858' }}>期限間近</p>
         </div>
-        <div className="rounded-2xl p-4 text-center" style={{ backgroundColor: '#FFF8F8', boxShadow: '0 2px 12px rgba(0,0,0,0.05)' }}>
+        <div className="rounded-2xl p-4 text-center" style={{ flex: 1, backgroundColor: '#FFF8F8', boxShadow: '0 2px 12px rgba(0,0,0,0.05)' }}>
           <p className="text-2xl font-black" style={{ color: '#B85555' }}>{expiredCount}</p>
           <p className="text-xs font-medium mt-1" style={{ color: '#C87878' }}>期限切れ</p>
         </div>
