@@ -24,7 +24,6 @@ export default function MasterFoodManager({ masterFoods, userId }: Props) {
   async function handleAdd(e: React.FormEvent) {
     e.preventDefault()
     setLoading(true)
-
     const supabase = createClient()
     await supabase.from('master_foods').insert({
       user_id: userId,
@@ -32,14 +31,14 @@ export default function MasterFoodManager({ masterFoods, userId }: Props) {
       category,
       default_days: parseInt(defaultDays),
     })
-
     setName('')
     setDefaultDays('')
     router.refresh()
     setLoading(false)
   }
 
-  async function handleDelete(id: string) {
+  async function handleDelete(id: string, name: string) {
+    if (!confirm(`「${name}」を削除しますか？`)) return
     setDeletingId(id)
     const supabase = createClient()
     await supabase.from('master_foods').delete().eq('id', id)
@@ -51,13 +50,15 @@ export default function MasterFoodManager({ masterFoods, userId }: Props) {
 
   return (
     <div>
-      <div className="flex items-center gap-2 mb-6">
-        <Link href="/" className="text-gray-400 hover:text-gray-600 text-sm">← 戻る</Link>
-        <h2 className="text-lg font-semibold text-gray-700">マスターDB</h2>
+      <div className="flex items-center gap-3 mb-6">
+        <Link href="/" className="w-9 h-9 flex items-center justify-center rounded-full bg-white shadow-sm text-gray-400 hover:text-emerald-600 transition-colors">
+          ←
+        </Link>
+        <h2 className="text-xl font-black text-gray-700">マスターDB</h2>
       </div>
 
-      <div className="bg-white rounded-2xl shadow-sm p-6 mb-6">
-        <h3 className="text-sm font-medium text-gray-700 mb-4">食材を追加</h3>
+      <div className="bg-white rounded-3xl shadow-sm p-6 mb-6">
+        <h3 className="text-sm font-bold text-gray-600 mb-4">食材を追加</h3>
         <form onSubmit={handleAdd} className="space-y-3">
           <div className="flex gap-2">
             <input
@@ -66,12 +67,12 @@ export default function MasterFoodManager({ masterFoods, userId }: Props) {
               onChange={(e) => setName(e.target.value)}
               required
               placeholder="食材名"
-              className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="flex-1 border-2 border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-emerald-400 transition-colors"
             />
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="border-2 border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-emerald-400 transition-colors bg-white"
             >
               {CATEGORIES.map(c => <option key={c}>{c}</option>)}
             </select>
@@ -83,14 +84,14 @@ export default function MasterFoodManager({ masterFoods, userId }: Props) {
               onChange={(e) => setDefaultDays(e.target.value)}
               required
               min={1}
-              placeholder="デフォルト日数"
-              className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+              placeholder="日数"
+              className="flex-1 border-2 border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-emerald-400 transition-colors"
             />
             <span className="text-sm text-gray-500 whitespace-nowrap">日間</span>
             <button
               type="submit"
               disabled={loading}
-              className="bg-green-500 hover:bg-green-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors disabled:opacity-50 whitespace-nowrap"
+              className="bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-sm font-bold px-5 py-2.5 rounded-xl transition-all shadow-sm hover:shadow-md disabled:opacity-50 whitespace-nowrap"
             >
               追加
             </button>
@@ -98,27 +99,27 @@ export default function MasterFoodManager({ masterFoods, userId }: Props) {
         </form>
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-3">
         {categories.map(cat => (
           <div key={cat} className="bg-white rounded-2xl shadow-sm overflow-hidden">
-            <div className="px-4 py-3 bg-gray-50 border-b border-gray-100">
-              <p className="text-sm font-medium text-gray-600">{cat}</p>
+            <div className="px-4 py-3 bg-gradient-to-r from-emerald-50 to-teal-50 border-b border-emerald-100">
+              <p className="text-sm font-bold text-emerald-700">{cat}</p>
             </div>
             <div className="divide-y divide-gray-100">
               {masterFoods.filter(m => m.category === cat).map(m => (
                 <div key={m.id} className="flex items-center justify-between px-4 py-3">
                   <div>
-                    <span className="text-sm text-gray-800">{m.name}</span>
+                    <span className="text-sm font-medium text-gray-800">{m.name}</span>
                     <span className="text-xs text-gray-400 ml-2">購入後 {m.default_days} 日</span>
                     {m.user_id === null && (
-                      <span className="text-xs text-blue-400 ml-2">共通</span>
+                      <span className="text-xs text-teal-500 bg-teal-50 px-2 py-0.5 rounded-full ml-2">共通</span>
                     )}
                   </div>
                   {m.user_id !== null && (
                     <button
-                      onClick={() => handleDelete(m.id)}
+                      onClick={() => handleDelete(m.id, m.name)}
                       disabled={deletingId === m.id}
-                      className="text-gray-300 hover:text-red-400 transition-colors disabled:opacity-30"
+                      className="w-8 h-8 flex items-center justify-center rounded-full text-gray-300 hover:bg-red-100 hover:text-red-500 transition-all disabled:opacity-30"
                       aria-label="削除"
                     >
                       🗑

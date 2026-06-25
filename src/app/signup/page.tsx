@@ -34,15 +34,15 @@ export default function SignupPage() {
 
   if (done) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-        <div className="w-full max-w-md bg-white rounded-2xl shadow-sm p-8 text-center">
-          <div className="text-4xl mb-4">📧</div>
+      <div className="min-h-screen flex items-center justify-center px-4 bg-gradient-to-br from-emerald-400 via-teal-300 to-cyan-400">
+        <div className="w-full max-w-md bg-white rounded-3xl shadow-xl p-8 text-center">
+          <div className="text-5xl mb-4">📧</div>
           <h2 className="text-xl font-bold text-gray-800 mb-2">確認メールを送信しました</h2>
-          <p className="text-gray-500 text-sm">
+          <p className="text-gray-500 text-sm leading-relaxed">
             {email} に確認メールを送りました。<br />
             メール内のリンクをクリックしてログインしてください。
           </p>
-          <Link href="/login" className="mt-6 inline-block text-green-600 font-medium hover:underline text-sm">
+          <Link href="/login" className="mt-6 inline-block bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-bold px-6 py-3 rounded-xl text-sm hover:opacity-90 transition-opacity">
             ログインページへ
           </Link>
         </div>
@@ -51,53 +51,63 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-sm p-8">
-        <h1 className="text-2xl font-bold text-center text-gray-800 mb-2">新規登録</h1>
-        <p className="text-center text-gray-500 text-sm mb-8">Fresh Keeper へようこそ</p>
+    <div className="min-h-screen flex items-center justify-center px-4 bg-gradient-to-br from-emerald-400 via-teal-300 to-cyan-400">
+      <div className="w-full max-w-md">
+        <div className="text-center mb-8">
+          <div className="text-6xl mb-3">🥦</div>
+          <h1 className="text-3xl font-black text-white drop-shadow-md">Fresh Keeper</h1>
+          <p className="text-white/80 text-sm mt-1">冷蔵庫の食材を賢く管理しよう</p>
+        </div>
 
-        <form onSubmit={handleSignup} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">メールアドレス</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
-              placeholder="example@email.com"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">パスワード（6文字以上）</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              minLength={6}
-              className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
-              placeholder="••••••••"
-            />
-          </div>
+        <div className="bg-white rounded-3xl shadow-xl p-8">
+          <h2 className="text-xl font-bold text-gray-800 mb-6">新規登録</h2>
+          <form onSubmit={handleSignup} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-600 mb-1">メールアドレス</label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-400 transition-colors"
+                placeholder="example@email.com"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-600 mb-1">パスワード（6文字以上）</label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                minLength={6}
+                className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-400 transition-colors"
+                placeholder="••••••••"
+              />
+            </div>
 
-          {error && <p className="text-red-500 text-sm">{error}</p>}
+            {error && (
+              <div className="bg-red-50 border border-red-200 rounded-xl px-4 py-3">
+                <p className="text-red-600 text-sm">{error}</p>
+              </div>
+            )}
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-green-500 hover:bg-green-600 text-white font-medium py-2.5 rounded-lg transition-colors disabled:opacity-50"
-          >
-            {loading ? '登録中...' : 'アカウント作成'}
-          </button>
-        </form>
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold py-3 rounded-xl transition-all shadow-md hover:shadow-lg disabled:opacity-50"
+            >
+              {loading ? '登録中...' : 'アカウント作成'}
+            </button>
+          </form>
 
-        <p className="text-center text-sm text-gray-500 mt-6">
-          すでにアカウントをお持ちの方は{' '}
-          <Link href="/login" className="text-green-600 font-medium hover:underline">
-            ログイン
-          </Link>
-        </p>
+          <p className="text-center text-sm text-gray-500 mt-6">
+            すでにアカウントをお持ちの方は{' '}
+            <Link href="/login" className="text-emerald-600 font-bold hover:underline">
+              ログイン
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   )
