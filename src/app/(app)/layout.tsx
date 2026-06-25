@@ -1,9 +1,14 @@
 import Link from 'next/link'
 import { Nunito } from 'next/font/google'
+import { createClient } from '@/lib/supabase/server'
 
 const nunito = Nunito({ weight: '800', subsets: ['latin'] })
 
-export default function AppLayout({ children }: { children: React.ReactNode }) {
+export default async function AppLayout({ children }: { children: React.ReactNode }) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  const username = user?.email?.split('@')[0] ?? ''
+
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#F4F7F2' }}>
       <header className="sticky top-0 z-10" style={{ boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
@@ -19,7 +24,10 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               Fresh Keeper
             </h1>
           </div>
-          <div className="relative z-10">
+          <div className="relative z-10 flex items-center gap-3">
+            <span className="text-sm font-medium hidden sm:block" style={{ color: '#3F5F4B', textShadow: '0 1px 4px rgba(255,255,255,0.7)' }}>
+              👤 {username}
+            </span>
             <form action="/auth/signout" method="post">
               <button
                 type="submit"
