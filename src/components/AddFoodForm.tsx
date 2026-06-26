@@ -17,9 +17,19 @@ export default function AddFoodForm({ masterFoods, userId }: Props) {
   const [expiryDate, setExpiryDate] = useState('')
   const [quantity, setQuantity] = useState('')
   const [memo, setMemo] = useState('')
+  const [storageType, setStorageType] = useState<'冷蔵' | '冷凍'>('冷蔵')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [autoFilled, setAutoFilled] = useState(false)
+  const [matchedFood, setMatchedFood] = useState<MasterFood | null>(null)
+
+  function applyAutoFill(food: MasterFood, type: '冷蔵' | '冷凍') {
+    const days = type === '冷凍' && food.frozen_days ? food.frozen_days : food.default_days
+    const expiry = new Date()
+    expiry.setDate(expiry.getDate() + days)
+    setExpiryDate(toDateString(expiry))
+    setAutoFilled(true)
+  }
 
   function handleNameChange(value: string) {
     setName(value)
@@ -27,13 +37,17 @@ export default function AddFoodForm({ masterFoods, userId }: Props) {
       m.name === value || m.name.includes(value) || value.includes(m.name)
     )
     if (matched && value.length >= 2) {
-      const expiry = new Date()
-      expiry.setDate(expiry.getDate() + matched.default_days)
-      setExpiryDate(toDateString(expiry))
-      setAutoFilled(true)
+      setMatchedFood(matched)
+      applyAutoFill(matched, storageType)
     } else {
+      setMatchedFood(null)
       setAutoFilled(false)
     }
+  }
+
+  function handleStorageTypeChange(type: '冷蔵' | '冷凍') {
+    setStorageType(type)
+    if (matchedFood) applyAutoFill(matchedFood, type)
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -47,6 +61,7 @@ export default function AddFoodForm({ masterFoods, userId }: Props) {
       expiry_date: expiryDate,
       quantity: quantity || null,
       memo: memo || null,
+      storage_type: storageType,
     })
     if (error) {
       setError('保存に失敗しました。もう一度お試しください。')
@@ -58,8 +73,8 @@ export default function AddFoodForm({ masterFoods, userId }: Props) {
   }
 
   const categories = [...new Set(masterFoods.map(m => m.category))]
-
   const inputStyle: React.CSSProperties = { border: '1.5px solid #C8D8C8', backgroundColor: '#FAFDF8' }
+  const canFreeze = matchedFood?.frozen_days != null
 
   return (
     <div>
@@ -83,6 +98,38 @@ export default function AddFoodForm({ masterFoods, userId }: Props) {
           <datalist id="master-foods-list">
             {masterFoods.map(m => <option key={m.id} value={m.name} />)}
           </datalist>
+        </div>
+
+        {/* 冷蔵/冷凍トグル */}
+        <div>
+          <label className="block text-sm font-medium mb-1.5" style={{ color: '#6B7F73' }}>保存方法</label>
+          <div className="flex rounded-xl overflow-hidden" style={{ border: '1.5px solid #C8D8C8' }}>
+            <button
+              type="button"
+              onClick={() => handleStorageTypeChange('冷蔵')}
+              className="flex-1 py-2.5 text-sm font-bold transition-all"
+              style={storageType === '冷蔵'
+                ? { backgroundColor: '#4F7A62', color: '#FFFFFF' }
+                : { backgroundColor: '#FAFDF8', color: '#8FA898' }
+              }
+            >
+              🧊 冷蔵
+            </button>
+            <button
+              type="button"
+              onClick={() => handleStorageTypeChange('冷凍')}
+              className="flex-1 py-2.5 text-sm font-bold transition-all"
+              style={storageType === '冷凍'
+                ? { backgroundColor: '#4466BB', color: '#FFFFFF' }
+                : { backgroundColor: '#FAFDF8', color: '#8FA898' }
+              }
+            >
+              ❄️ 冷凍
+            </button>
+          </div>
+          {storageType === '冷凍' && !canFreeze && name.length >= 2 && (
+            <p className="text-xs mt-1.5" style={{ color: '#B89858' }}>この食材の冷凍日数はマスターDBに未登録です。日付を手動で入力してください。</p>
+          )}
         </div>
 
         <div>
@@ -124,7 +171,7 @@ export default function AddFoodForm({ masterFoods, userId }: Props) {
               onChange={(e) => setMemo(e.target.value)}
               className="w-full rounded-xl px-4 py-3 text-sm focus:outline-none transition-colors"
               style={inputStyle}
-              placeholder="例：冷凍済み"
+              placeholder="例：2袋まとめ買い"
             />
           </div>
         </div>
@@ -139,9 +186,9 @@ export default function AddFoodForm({ masterFoods, userId }: Props) {
           type="submit"
           disabled={loading}
           className="w-full text-white font-black py-3.5 rounded-xl transition-all shadow-sm hover:shadow-md disabled:opacity-50 hover:opacity-90"
-          style={{ backgroundColor: '#4F7A62' }}
+          style={{ backgroundColor: storageType === '冷凍' ? '#4466BB' : '#4F7A62' }}
         >
-          {loading ? '保存中...' : '🧊 冷蔵庫に追加'}
+          {loading ? '保存中...' : storageType === '冷凍' ? '❄️ 冷蔵庫に追加（冷凍）' : '🧊 冷蔵庫に追加'}
         </button>
       </form>
 

@@ -79,7 +79,12 @@ function Section({ title, foods, onDelete, deletingId }: {
           return (
             <div key={food.id} className="rounded-2xl p-4 flex items-center justify-between" style={{ ...cardStyle(days), boxShadow: '0 1px 6px rgba(0,0,0,0.05)' }}>
               <div className="flex-1 min-w-0">
-                <p className="font-bold truncate" style={{ color: '#3F5F4B' }}>{food.name}</p>
+                <div className="flex items-center gap-2">
+                  <p className="font-bold truncate" style={{ color: '#3F5F4B' }}>{food.name}</p>
+                  {food.storage_type === '冷凍' && (
+                    <span className="text-xs font-bold px-2 py-0.5 rounded-full flex-shrink-0" style={{ backgroundColor: '#E8F0FF', color: '#4466BB' }}>❄️ 冷凍</span>
+                  )}
+                </div>
                 <div className="flex items-center gap-2 mt-1 flex-wrap">
                   <span className="text-xs" style={{ color: '#A8B8A8' }}>{food.expiry_date}</span>
                   {food.quantity && <span className="text-xs" style={{ color: '#A8B8A8' }}>・{food.quantity}</span>}

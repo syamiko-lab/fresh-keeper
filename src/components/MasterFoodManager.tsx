@@ -105,7 +105,10 @@ export default function MasterFoodManager({ masterFoods, userId }: Props) {
                 >
                   <div>
                     <span className="text-sm font-medium" style={{ color: '#3F5F4B' }}>{m.name}</span>
-                    <span className="text-xs ml-2" style={{ color: '#A8B8A8' }}>購入後 {m.default_days} 日</span>
+                    <span className="text-xs ml-2" style={{ color: '#A8B8A8' }}>冷蔵 {m.default_days} 日</span>
+                    {m.frozen_days && (
+                      <span className="text-xs ml-1" style={{ color: '#7788CC' }}>/ 冷凍 {m.frozen_days} 日</span>
+                    )}
                     {m.user_id === null && (
                       <span className="text-xs px-2 py-0.5 rounded-full ml-2" style={{ backgroundColor: '#E8F3EC', color: '#4F7A62' }}>共通</span>
                     )}
