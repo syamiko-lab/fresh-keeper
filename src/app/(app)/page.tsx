@@ -14,6 +14,7 @@ export default async function DashboardPage() {
     .from('food_items')
     .select('*')
     .eq('user_id', user.id)
+    .eq('status', 'active')
     .order('expiry_date', { ascending: true })
 
   const allFoods = foods ?? []

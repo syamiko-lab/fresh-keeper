@@ -6,6 +6,7 @@ export type FoodItem = {
   quantity: string | null
   memo: string | null
   storage_type: '冷蔵' | '冷凍'
+  status: 'active' | 'shopping' | 'completed'
   created_at: string
 }
 

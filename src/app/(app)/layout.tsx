@@ -42,6 +42,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
         <nav className="hidden md:flex" style={{ backgroundColor: '#FFFEFA', borderTop: '1px solid #E8F0E8' }}>
           <div className="max-w-2xl mx-auto w-full flex">
             <NavTab href="/" label="🧊 冷蔵庫" />
+            <NavTab href="/shopping" label="🛒 買い物リスト" />
             <NavTab href="/add" label="＋ 食材追加" />
             <NavTab href="/master" label="📋 マスターDB" />
           </div>
@@ -55,6 +56,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
       {/* スマホのみ表示するボトムナビ */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 z-10 flex" style={{ backgroundColor: '#FFFEFA', borderTop: '1px solid #E8F0E8', boxShadow: '0 -2px 8px rgba(0,0,0,0.06)' }}>
         <BottomTab href="/" icon="🧊" label="冷蔵庫" />
+        <BottomTab href="/shopping" icon="🛒" label="買い物" />
         <BottomTab href="/add" icon="＋" label="追加" />
         <BottomTab href="/master" icon="📋" label="マスターDB" />
       </nav>

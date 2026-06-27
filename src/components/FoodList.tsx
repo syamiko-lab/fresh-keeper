@@ -142,6 +142,12 @@ export default function FoodList({ foods }: Props) {
     setDeletingId(null)
   }
 
+  async function handleMoveToShopping(id: string) {
+    const supabase = createClient()
+    await supabase.from('food_items').update({ status: 'shopping' }).eq('id', id)
+    router.refresh()
+  }
+
   function handleSaved() {
     setEditingFood(null)
     router.refresh()
@@ -167,19 +173,20 @@ export default function FoodList({ foods }: Props) {
         <EditModal food={editingFood} onClose={() => setEditingFood(null)} onSaved={handleSaved} />
       )}
       <div className="space-y-6">
-        {expired.length > 0 && <Section title="⚠️ 期限切れ"        foods={expired} onDelete={handleDelete} onEdit={setEditingFood} deletingId={deletingId} />}
-        {soon.length > 0    && <Section title="🕐 期限間近（3日以内）" foods={soon}    onDelete={handleDelete} onEdit={setEditingFood} deletingId={deletingId} />}
-        {fresh.length > 0   && <Section title="✅ まだ大丈夫"        foods={fresh}   onDelete={handleDelete} onEdit={setEditingFood} deletingId={deletingId} />}
+        {expired.length > 0 && <Section title="⚠️ 期限切れ"        foods={expired} onDelete={handleDelete} onEdit={setEditingFood} onShopping={handleMoveToShopping} deletingId={deletingId} />}
+        {soon.length > 0    && <Section title="🕐 期限間近（3日以内）" foods={soon}    onDelete={handleDelete} onEdit={setEditingFood} onShopping={handleMoveToShopping} deletingId={deletingId} />}
+        {fresh.length > 0   && <Section title="✅ まだ大丈夫"        foods={fresh}   onDelete={handleDelete} onEdit={setEditingFood} onShopping={handleMoveToShopping} deletingId={deletingId} />}
       </div>
     </>
   )
 }
 
-function Section({ title, foods, onDelete, onEdit, deletingId }: {
+function Section({ title, foods, onDelete, onEdit, onShopping, deletingId }: {
   title: string
   foods: FoodItem[]
   onDelete: (id: string, name: string) => void
   onEdit: (food: FoodItem) => void
+  onShopping: (id: string) => void
   deletingId: string | null
 }) {
   return (
@@ -205,6 +212,16 @@ function Section({ title, foods, onDelete, onEdit, deletingId }: {
                 {food.memo && <p className="text-xs mt-1 truncate" style={{ color: '#B8C8B8' }}>{food.memo}</p>}
               </div>
               <div className="flex items-center gap-1 ml-3">
+                <button
+                  onClick={() => onShopping(food.id)}
+                  className="w-8 h-8 flex items-center justify-center rounded-full transition-all text-base"
+                  style={{ color: '#C8D8C8' }}
+                  onMouseEnter={e => (e.currentTarget.style.backgroundColor = '#FFF3DC', e.currentTarget.style.color = '#9A7030')}
+                  onMouseLeave={e => (e.currentTarget.style.backgroundColor = 'transparent', e.currentTarget.style.color = '#C8D8C8')}
+                  aria-label="買い物リストへ"
+                >
+                  🛒
+                </button>
                 <button
                   onClick={() => onEdit(food)}
                   className="w-8 h-8 flex items-center justify-center rounded-full transition-all text-base"
