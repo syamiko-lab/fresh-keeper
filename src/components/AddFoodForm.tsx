@@ -62,6 +62,8 @@ export default function AddFoodForm({ masterFoods, userId }: Props) {
       quantity: quantity || null,
       memo: memo || null,
       storage_type: storageType,
+      category: matchedFood?.category ?? 'その他',
+      barcode: null,
     })
     if (error) {
       setError('保存に失敗しました。もう一度お試しください。')

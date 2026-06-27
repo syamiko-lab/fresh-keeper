@@ -9,6 +9,8 @@ export type FoodItem = {
   memo: string | null
   storage_type: '冷蔵' | '冷凍'
   status: FoodStatus
+  barcode: string | null
+  category: string
   created_at: string
 }
 

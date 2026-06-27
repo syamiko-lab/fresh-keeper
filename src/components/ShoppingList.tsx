@@ -5,8 +5,7 @@ import { createClient } from '@/lib/supabase/client'
 import { FoodItem, FoodStatus } from '@/lib/types'
 import FoodCard from '@/components/FoodCard'
 
-type ShoppingFood = FoodItem & { resolvedCategory: string }
-type Props = { foods: ShoppingFood[] }
+type Props = { foods: FoodItem[] }
 
 const CATEGORY_ORDER = ['野菜', '肉類', '魚類', '乳製品', '卵・豆腐', '加工食品', 'その他']
 
@@ -20,18 +19,15 @@ const CATEGORY_LABELS: Record<string, string> = {
   'その他':  '📦 その他',
 }
 
-function groupByCategory(foods: ShoppingFood[]): [string, ShoppingFood[]][] {
-  const map = new Map<string, ShoppingFood[]>()
-
+function groupByCategory(foods: FoodItem[]): [string, FoodItem[]][] {
+  const map = new Map<string, FoodItem[]>()
   for (const food of foods) {
-    const cat = food.resolvedCategory || 'その他'
+    const cat = food.category || 'その他'
     if (!map.has(cat)) map.set(cat, [])
     map.get(cat)!.push(food)
   }
-
-  const ordered = CATEGORY_ORDER.filter(c => map.has(c)).map(c => [c, map.get(c)!] as [string, ShoppingFood[]])
+  const ordered = CATEGORY_ORDER.filter(c => map.has(c)).map(c => [c, map.get(c)!] as [string, FoodItem[]])
   const rest = [...map.entries()].filter(([c]) => !CATEGORY_ORDER.includes(c))
-
   return [...ordered, ...rest]
 }
 
@@ -54,23 +50,16 @@ export default function ShoppingList({ foods }: Props) {
     )
   }
 
-  const groups = groupByCategory(foods)
-
   return (
     <div className="space-y-6">
-      {groups.map(([category, items]) => (
+      {groupByCategory(foods).map(([category, items]) => (
         <div key={category}>
           <h3 className="text-sm font-bold mb-2 px-1" style={{ color: '#8FA898' }}>
             {CATEGORY_LABELS[category] ?? category}
           </h3>
           <div className="space-y-2">
             {items.map(food => (
-              <FoodCard
-                key={food.id}
-                food={food}
-                mode="shopping"
-                onStatusChange={handleStatusChange}
-              />
+              <FoodCard key={food.id} food={food} mode="shopping" onStatusChange={handleStatusChange} />
             ))}
           </div>
         </div>
