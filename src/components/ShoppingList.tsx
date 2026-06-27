@@ -5,7 +5,7 @@ import { createClient } from '@/lib/supabase/client'
 import { FoodItem, FoodStatus } from '@/lib/types'
 import FoodCard from '@/components/FoodCard'
 
-type Props = { foods: FoodItem[] }
+type Props = { foods: FoodItem[]; userId: string }
 
 const CATEGORY_ORDER = ['野菜', '肉類', '魚類', '乳製品', '卵・豆腐', '加工食品', 'その他']
 
@@ -31,12 +31,12 @@ function groupByCategory(foods: FoodItem[]): [string, FoodItem[]][] {
   return [...ordered, ...rest]
 }
 
-export default function ShoppingList({ foods }: Props) {
+export default function ShoppingList({ foods, userId }: Props) {
   const router = useRouter()
 
   async function handleStatusChange(id: string, status: FoodStatus) {
     const supabase = createClient()
-    await supabase.from('food_items').update({ status }).eq('id', id)
+    await supabase.from('food_items').update({ status }).eq('id', id).eq('user_id', userId)
     router.refresh()
   }
 

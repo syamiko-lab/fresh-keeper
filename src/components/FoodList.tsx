@@ -6,7 +6,7 @@ import { createClient } from '@/lib/supabase/client'
 import { FoodItem, FoodStatus } from '@/lib/types'
 import FoodCard from '@/components/FoodCard'
 
-type Props = { foods: FoodItem[] }
+type Props = { foods: FoodItem[]; userId: string }
 
 function getDaysUntilExpiry(expiryDate: string): number {
   const today = new Date()
@@ -40,7 +40,7 @@ function EditModal({ food, onClose, onSaved }: {
       quantity: quantity || null,
       memo: memo || null,
       storage_type: storageType,
-    }).eq('id', food.id)
+    }).eq('id', food.id).eq('user_id', food.user_id)
     setLoading(false)
     onSaved()
   }
@@ -99,13 +99,13 @@ function EditModal({ food, onClose, onSaved }: {
   )
 }
 
-export default function FoodList({ foods }: Props) {
+export default function FoodList({ foods, userId }: Props) {
   const router = useRouter()
   const [editingFood, setEditingFood] = useState<FoodItem | null>(null)
 
   async function handleStatusChange(id: string, status: FoodStatus) {
     const supabase = createClient()
-    await supabase.from('food_items').update({ status }).eq('id', id)
+    await supabase.from('food_items').update({ status }).eq('id', id).eq('user_id', userId)
     router.refresh()
   }
 

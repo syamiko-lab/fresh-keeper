@@ -19,7 +19,7 @@ export default async function ShoppingPage() {
   return (
     <div>
       <h2 className="text-xl font-black mb-6" style={{ color: '#3F5F4B' }}>買い物リスト</h2>
-      <ShoppingList foods={foods as FoodItem[] ?? []} />
+      <ShoppingList foods={foods as FoodItem[] ?? []} userId={user.id} />
     </div>
   )
 }

@@ -56,7 +56,7 @@ export default async function DashboardPage() {
         </Link>
       </div>
 
-      <FoodList foods={allFoods as FoodItem[]} />
+      <FoodList foods={allFoods as FoodItem[]} userId={user.id} />
     </div>
   )
 }

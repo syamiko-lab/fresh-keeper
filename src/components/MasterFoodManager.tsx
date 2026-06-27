@@ -32,7 +32,7 @@ export default function MasterFoodManager({ masterFoods, userId }: Props) {
     if (!confirm(`「${name}」を削除しますか？`)) return
     setDeletingId(id)
     const supabase = createClient()
-    await supabase.from('master_foods').delete().eq('id', id)
+    await supabase.from('master_foods').delete().eq('id', id).eq('user_id', userId)
     router.refresh()
     setDeletingId(null)
   }
